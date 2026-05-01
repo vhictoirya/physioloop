@@ -1,0 +1,32 @@
+# Anchor
+.anchor
+target
+**/*.rs.bk
+
+# Node
+node_modules
+yarn.lock
+package-lock.json
+
+# Next.js
+.next
+app/tsconfig.tsbuildinfo
+
+# Expo / Metro
+patient-app/.expo
+patient-app/android
+patient-app/ios
+
+# Env — never commit secrets
+.env
+.env.local
+.env*.local
+
+# OS
+.DS_Store
+
+# Bare worklet bundle (generated — rebuild with bare-pack)
+patient-app/assets/qvac-worker.bundle
+
+# Test ledger
+test-ledger

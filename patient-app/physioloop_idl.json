@@ -1,0 +1,1295 @@
+{
+  "address": "3vArMkTYa2J95xVYsgdsnDu2pokBjRQGj7ZFUdeDutQi",
+  "metadata": {
+    "name": "physioloop",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "complete_plan",
+      "docs": [
+        "Marks the plan complete. Returns any remaining escrow to the patient.",
+        "Sets caregiver_profile.nft_minted = true (Bubblegum mint in a follow-on ix)."
+      ],
+      "discriminator": [
+        128,
+        76,
+        72,
+        25,
+        144,
+        88,
+        91,
+        141
+      ],
+      "accounts": [
+        {
+          "name": "physio",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "treatment_plan"
+          ]
+        },
+        {
+          "name": "physio_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  104,
+                  121,
+                  115,
+                  105,
+                  111
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "physio"
+              }
+            ]
+          }
+        },
+        {
+          "name": "treatment_plan",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  108,
+                  97,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "physio"
+              },
+              {
+                "kind": "account",
+                "path": "treatment_plan.patient",
+                "account": "TreatmentPlan"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "treatment_plan"
+              }
+            ]
+          }
+        },
+        {
+          "name": "patient_pusd_ata",
+          "docs": [
+            "Patient's PUSD account to receive any remaining escrow refund"
+          ],
+          "writable": true
+        },
+        {
+          "name": "caregiver_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  97,
+                  114,
+                  101,
+                  103,
+                  105,
+                  118,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "treatment_plan.caregiver",
+                "account": "TreatmentPlan"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pusd_mint"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_treatment_plan",
+      "docs": [
+        "Physio issues a Home Exercise Program (HEP) to a patient.",
+        "Initialises the TreatmentPlan PDA and the escrow vault token account."
+      ],
+      "discriminator": [
+        129,
+        115,
+        77,
+        25,
+        109,
+        115,
+        223,
+        120
+      ],
+      "accounts": [
+        {
+          "name": "physio_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  104,
+                  121,
+                  115,
+                  105,
+                  111
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "physio"
+              }
+            ]
+          }
+        },
+        {
+          "name": "treatment_plan",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  108,
+                  97,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "physio"
+              },
+              {
+                "kind": "account",
+                "path": "patient"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "treatment_plan"
+              }
+            ]
+          }
+        },
+        {
+          "name": "physio",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "patient"
+        },
+        {
+          "name": "caregiver"
+        },
+        {
+          "name": "pusd_mint"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "sessions",
+          "type": "u8"
+        },
+        {
+          "name": "pusd_per_session",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "register_caregiver",
+      "docs": [
+        "Caregiver creates a global profile before being assigned to patients."
+      ],
+      "discriminator": [
+        159,
+        189,
+        20,
+        162,
+        94,
+        5,
+        149,
+        98
+      ],
+      "accounts": [
+        {
+          "name": "caregiver_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  97,
+                  114,
+                  101,
+                  103,
+                  105,
+                  118,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "caregiver"
+              }
+            ]
+          }
+        },
+        {
+          "name": "caregiver",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "register_physio",
+      "docs": [
+        "Physiotherapist creates an on-chain profile. Called once per wallet."
+      ],
+      "discriminator": [
+        254,
+        84,
+        91,
+        239,
+        251,
+        80,
+        221,
+        140
+      ],
+      "accounts": [
+        {
+          "name": "physio_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  104,
+                  121,
+                  115,
+                  105,
+                  111
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "physio"
+              }
+            ]
+          }
+        },
+        {
+          "name": "physio",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "tier",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "stake_escrow",
+      "docs": [
+        "Patient locks PUSD into the escrow vault and activates the plan.",
+        "`amount` must cover sessions_total × pusd_per_session."
+      ],
+      "discriminator": [
+        117,
+        255,
+        148,
+        190,
+        2,
+        238,
+        184,
+        250
+      ],
+      "accounts": [
+        {
+          "name": "treatment_plan",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  108,
+                  97,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "treatment_plan.physio",
+                "account": "TreatmentPlan"
+              },
+              {
+                "kind": "account",
+                "path": "patient"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "treatment_plan"
+              }
+            ]
+          }
+        },
+        {
+          "name": "patient_pusd_ata",
+          "writable": true
+        },
+        {
+          "name": "pusd_mint"
+        },
+        {
+          "name": "patient",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "treatment_plan"
+          ]
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "submit_attestation",
+      "docs": [
+        "Patient submits an on-device QVAC proof for a completed exercise session.",
+        "Releases pusd_per_session from escrow → physio ATA.",
+        "Increments physio credibility score using a running average."
+      ],
+      "discriminator": [
+        238,
+        220,
+        255,
+        105,
+        183,
+        211,
+        40,
+        83
+      ],
+      "accounts": [
+        {
+          "name": "patient",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "treatment_plan"
+          ]
+        },
+        {
+          "name": "physio_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  104,
+                  121,
+                  115,
+                  105,
+                  111
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "physio_profile.physio",
+                "account": "PhysioProfile"
+              }
+            ]
+          }
+        },
+        {
+          "name": "treatment_plan",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  108,
+                  97,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "treatment_plan.physio",
+                "account": "TreatmentPlan"
+              },
+              {
+                "kind": "account",
+                "path": "patient"
+              }
+            ]
+          }
+        },
+        {
+          "name": "session_attestation",
+          "writable": true
+        },
+        {
+          "name": "escrow_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "treatment_plan"
+              }
+            ]
+          }
+        },
+        {
+          "name": "physio_pusd_ata",
+          "docs": [
+            "Physio's PUSD associated token account. Ownership validated in handler."
+          ],
+          "writable": true
+        },
+        {
+          "name": "pusd_mint"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "session_number",
+          "type": "u8"
+        },
+        {
+          "name": "proof_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "submit_caregiver_checkin",
+      "docs": [
+        "Caregiver records a daily patient check-in and earns micro-PUSD from escrow."
+      ],
+      "discriminator": [
+        56,
+        65,
+        198,
+        103,
+        242,
+        129,
+        90,
+        20
+      ],
+      "accounts": [
+        {
+          "name": "caregiver",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "caregiver_profile"
+          ]
+        },
+        {
+          "name": "caregiver_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  97,
+                  114,
+                  101,
+                  103,
+                  105,
+                  118,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "caregiver"
+              }
+            ]
+          }
+        },
+        {
+          "name": "treatment_plan",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  108,
+                  97,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "treatment_plan.physio",
+                "account": "TreatmentPlan"
+              },
+              {
+                "kind": "account",
+                "path": "treatment_plan.patient",
+                "account": "TreatmentPlan"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "treatment_plan"
+              }
+            ]
+          }
+        },
+        {
+          "name": "caregiver_pusd_ata",
+          "writable": true
+        },
+        {
+          "name": "pusd_mint"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "update_credibility_score",
+      "docs": [
+        "Permissionless recalculation of a physio's credibility score for one plan.",
+        "Useful if the running average drifts due to edge cases."
+      ],
+      "discriminator": [
+        162,
+        42,
+        170,
+        165,
+        182,
+        45,
+        88,
+        78
+      ],
+      "accounts": [
+        {
+          "name": "physio_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  104,
+                  121,
+                  115,
+                  105,
+                  111
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "physio_profile.physio",
+                "account": "PhysioProfile"
+              }
+            ]
+          }
+        },
+        {
+          "name": "treatment_plan",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  108,
+                  97,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "physio_profile.physio",
+                "account": "PhysioProfile"
+              },
+              {
+                "kind": "account",
+                "path": "treatment_plan.patient",
+                "account": "TreatmentPlan"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "CaregiverProfile",
+      "discriminator": [
+        94,
+        119,
+        156,
+        70,
+        18,
+        146,
+        222,
+        26
+      ]
+    },
+    {
+      "name": "PhysioProfile",
+      "discriminator": [
+        31,
+        26,
+        97,
+        5,
+        115,
+        142,
+        171,
+        184
+      ]
+    },
+    {
+      "name": "SessionAttestation",
+      "discriminator": [
+        33,
+        170,
+        15,
+        153,
+        190,
+        100,
+        218,
+        204
+      ]
+    },
+    {
+      "name": "TreatmentPlan",
+      "discriminator": [
+        234,
+        173,
+        204,
+        237,
+        189,
+        93,
+        237,
+        119
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "CaregiverCheckin",
+      "discriminator": [
+        108,
+        104,
+        56,
+        246,
+        19,
+        36,
+        215,
+        36
+      ]
+    },
+    {
+      "name": "EscrowFunded",
+      "discriminator": [
+        228,
+        243,
+        166,
+        74,
+        22,
+        167,
+        157,
+        244
+      ]
+    },
+    {
+      "name": "PlanCompleted",
+      "discriminator": [
+        82,
+        207,
+        15,
+        24,
+        97,
+        117,
+        100,
+        153
+      ]
+    },
+    {
+      "name": "PlanCreated",
+      "discriminator": [
+        215,
+        11,
+        135,
+        121,
+        208,
+        119,
+        149,
+        149
+      ]
+    },
+    {
+      "name": "SessionCompleted",
+      "discriminator": [
+        191,
+        190,
+        106,
+        122,
+        152,
+        219,
+        165,
+        90
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "PlanNotActive",
+      "msg": "Plan is not currently active"
+    },
+    {
+      "code": 6001,
+      "name": "PlanAlreadyActive",
+      "msg": "Plan is already active — cannot re-stake escrow"
+    },
+    {
+      "code": 6002,
+      "name": "PlanNotComplete",
+      "msg": "Plan is not yet complete"
+    },
+    {
+      "code": 6003,
+      "name": "AllSessionsCompleted",
+      "msg": "All sessions for this plan have been completed"
+    },
+    {
+      "code": 6004,
+      "name": "InvalidSessionNumber",
+      "msg": "session_number must be exactly sessions_completed + 1"
+    },
+    {
+      "code": 6005,
+      "name": "InsufficientEscrow",
+      "msg": "Escrow balance is insufficient for this operation"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidSessionCount",
+      "msg": "sessions must be between 1 and 60"
+    },
+    {
+      "code": 6007,
+      "name": "InvalidAmount",
+      "msg": "pusd_per_session must be greater than zero"
+    },
+    {
+      "code": 6008,
+      "name": "MathOverflow",
+      "msg": "Arithmetic overflow"
+    },
+    {
+      "code": 6009,
+      "name": "Unauthorized",
+      "msg": "Caller is not authorised for this account"
+    },
+    {
+      "code": 6010,
+      "name": "InvalidPhysioAta",
+      "msg": "physio_pusd_ata does not belong to the treatment plan physio"
+    },
+    {
+      "code": 6011,
+      "name": "AlreadyCheckedInToday",
+      "msg": "Caregiver has already checked in today"
+    },
+    {
+      "code": 6012,
+      "name": "NoPatients",
+      "msg": "Physio has no patients — credibility score cannot be calculated"
+    }
+  ],
+  "types": [
+    {
+      "name": "CaregiverCheckin",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "treatment_plan",
+            "type": "pubkey"
+          },
+          {
+            "name": "caregiver",
+            "type": "pubkey"
+          },
+          {
+            "name": "checkins_total",
+            "type": "u32"
+          },
+          {
+            "name": "streak",
+            "type": "u32"
+          },
+          {
+            "name": "pusd_earned",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CaregiverProfile",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "caregiver",
+            "type": "pubkey"
+          },
+          {
+            "name": "checkins_total",
+            "type": "u32"
+          },
+          {
+            "name": "checkins_streak",
+            "type": "u32"
+          },
+          {
+            "name": "pusd_earned",
+            "type": "u64"
+          },
+          {
+            "name": "nft_minted",
+            "type": "bool"
+          },
+          {
+            "name": "last_checkin",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EscrowFunded",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "treatment_plan",
+            "type": "pubkey"
+          },
+          {
+            "name": "patient",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PhysioProfile",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "physio",
+            "type": "pubkey"
+          },
+          {
+            "name": "subscription_tier",
+            "type": "u8"
+          },
+          {
+            "name": "credibility_score",
+            "type": "f32"
+          },
+          {
+            "name": "total_patients",
+            "type": "u32"
+          },
+          {
+            "name": "active_patients",
+            "type": "u32"
+          },
+          {
+            "name": "completion_rate",
+            "type": "f32"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PlanCompleted",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "treatment_plan",
+            "type": "pubkey"
+          },
+          {
+            "name": "physio",
+            "type": "pubkey"
+          },
+          {
+            "name": "patient",
+            "type": "pubkey"
+          },
+          {
+            "name": "sessions_completed",
+            "type": "u8"
+          },
+          {
+            "name": "remaining_returned",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PlanCreated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "treatment_plan",
+            "type": "pubkey"
+          },
+          {
+            "name": "physio",
+            "type": "pubkey"
+          },
+          {
+            "name": "patient",
+            "type": "pubkey"
+          },
+          {
+            "name": "sessions_total",
+            "type": "u8"
+          },
+          {
+            "name": "pusd_per_session",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SessionAttestation",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "treatment_plan",
+            "type": "pubkey"
+          },
+          {
+            "name": "session_number",
+            "type": "u8"
+          },
+          {
+            "name": "proof_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "completed_at",
+            "type": "i64"
+          },
+          {
+            "name": "verified",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SessionCompleted",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "treatment_plan",
+            "type": "pubkey"
+          },
+          {
+            "name": "session_number",
+            "type": "u8"
+          },
+          {
+            "name": "proof_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "pusd_released",
+            "type": "u64"
+          },
+          {
+            "name": "sessions_remaining",
+            "type": "u8"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TreatmentPlan",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "physio",
+            "type": "pubkey"
+          },
+          {
+            "name": "patient",
+            "type": "pubkey"
+          },
+          {
+            "name": "caregiver",
+            "type": "pubkey"
+          },
+          {
+            "name": "escrow_amount",
+            "type": "u64"
+          },
+          {
+            "name": "sessions_total",
+            "type": "u8"
+          },
+          {
+            "name": "sessions_completed",
+            "type": "u8"
+          },
+          {
+            "name": "pusd_per_session",
+            "type": "u64"
+          },
+          {
+            "name": "plan_active",
+            "type": "bool"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "escrow_bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}

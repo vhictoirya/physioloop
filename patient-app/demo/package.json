@@ -1,0 +1,16 @@
+{
+  "name": "physioloop-qvac-demo",
+  "version": "1.0.0",
+  "description": "Runnable demo: QVAC exercise verification without a phone",
+  "type": "module",
+  "scripts": {
+    "verify": "tsx verify-exercise.ts",
+    "verify:ts": "tsx verify-exercise.ts"
+  },
+  "dependencies": {
+    "@qvac/sdk": "latest"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
+  }
+}

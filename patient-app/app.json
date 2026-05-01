@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "PhysioLoop",
+    "slug": "physioloop-patient",
+    "version": "1.0.0",
+    "scheme": "physioloop",
+    "platforms": ["ios", "android"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "io.physioloop.patient",
+      "infoPlist": {
+        "NSCameraUsageDescription": "PhysioLoop uses your camera to verify exercise completion locally using on-device AI. No video is ever uploaded.",
+        "NSMicrophoneUsageDescription": "Required for camera access."
+      }
+    },
+    "android": {
+      "package": "io.physioloop.patient",
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE"]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-camera",
+      [
+        "expo-build-properties",
+        {
+          "android": { "minSdkVersion": 24 },
+          "ios": { "deploymentTarget": "17.0" }
+        }
+      ]
+    ]
+  }
+}

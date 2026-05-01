@@ -1,0 +1,17 @@
+{
+  "name": "physioloop-qvac-worklet",
+  "version": "1.0.0",
+  "description": "Bare runtime worklet: on-device QVAC exercise verification + TTS coaching",
+  "main": "index.js",
+  "scripts": {
+    "bundle": "bare-pack ./index.js --builtins ./builtins.json -o ../assets/qvac-worker.bundle"
+  },
+  "dependencies": {
+    "@qvac/sdk": "latest",
+    "b4a": "^1.6.6",
+    "bare-ipc": "latest"
+  },
+  "devDependencies": {
+    "bare-pack": "latest"
+  }
+}
