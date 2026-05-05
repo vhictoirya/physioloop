@@ -878,47 +878,12 @@ function PatientPage() {
           <div className="flex justify-between text-sm pt-1 border-t border-gray-100"><span className="text-gray-500">Remaining in escrow</span><span className="font-semibold text-green-700">${pusdToDisplay(remaining)}</span></div>
         </div>
 
-        {/* Caregiver certificate */}
+        {/* Caregiver info — certificate lives in the caregiver dashboard */}
         {plan.caregiverName && (
-          <div className="relative rounded-2xl border-2 border-amber-200 bg-gradient-to-b from-amber-50 to-white p-5 shadow-sm overflow-hidden">
-            {/* Corner marks */}
-            <div className="absolute top-2.5 left-2.5 w-5 h-5 border-t-2 border-l-2 border-amber-300" />
-            <div className="absolute top-2.5 right-2.5 w-5 h-5 border-t-2 border-r-2 border-amber-300" />
-            <div className="absolute bottom-2.5 left-2.5 w-5 h-5 border-b-2 border-l-2 border-amber-300" />
-            <div className="absolute bottom-2.5 right-2.5 w-5 h-5 border-b-2 border-r-2 border-amber-300" />
-
-            <div className="text-center space-y-2 px-2">
-              <p className="text-[10px] font-bold text-amber-600 uppercase tracking-[0.2em]">Certificate of Care</p>
-              <p className="text-2xl">🏅</p>
-              <p className="text-[11px] text-gray-500">This certifies that</p>
-              <p className="text-base font-bold text-gray-900">{plan.caregiverName}</p>
-              <p className="text-[11px] text-gray-500 leading-relaxed">
-                has provided dedicated care and daily check-ins for{" "}
-                <span className="font-semibold text-gray-700">{plan.patientName || nameParam}</span>{" "}
-                {plan.condition ? `recovering from ${plan.condition}` : "throughout their physiotherapy programme"} on PhysioLoop.
-              </p>
-              {planComplete && (
-                <p className="text-xs font-semibold text-green-700">
-                  Full programme completed · {plan.sessionsTotal} sessions
-                </p>
-              )}
-              {!planComplete && (
-                <p className="text-xs text-amber-600">
-                  {plan.sessionsCompleted}/{plan.sessionsTotal} sessions · in progress
-                </p>
-              )}
-              <div className="pt-2 space-y-1">
-                <div className="flex items-center gap-2">
-                  <div className="h-px flex-1 bg-amber-200" />
-                  <span className="text-[9px] text-amber-600 font-semibold tracking-wider">VERIFIED ON-CHAIN</span>
-                  <div className="h-px flex-1 bg-amber-200" />
-                </div>
-                <p className="text-[9px] text-gray-400 font-mono">
-                  {planParam ? `${planParam.slice(0, 8)}…${planParam.slice(-8)}` : ""}
-                </p>
-                <p className="text-[9px] text-gray-400">Solana · PhysioLoop Protocol</p>
-              </div>
-            </div>
+          <div className="rounded-2xl bg-white border border-gray-200 p-4 shadow-sm">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Your caregiver</p>
+            <p className="text-sm font-medium text-gray-800">{plan.caregiverName}</p>
+            <p className="text-xs text-gray-400 mt-0.5">Checking in on your progress daily 🏅</p>
           </div>
         )}
       </div>

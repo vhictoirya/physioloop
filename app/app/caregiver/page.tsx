@@ -81,6 +81,7 @@ function CaregiverPage() {
   const [screen, setScreen] = useState<Screen>("checkin");
   const [phase, setPhase] = useState<CheckinPhase>("pending");
   const [checkinError, setCheckinError] = useState<string | null>(null);
+  const [showCert, setShowCert] = useState(false);
 
   useEffect(() => {
     if (!keyParam) { setLoadError("Missing access key."); setLoading(false); return; }
@@ -320,19 +321,64 @@ function CaregiverPage() {
             </div>
 
             <div className="rounded-2xl bg-white border border-gray-200 p-4 shadow-sm space-y-3">
-              <p className="text-sm font-semibold text-gray-800">Care Certificate Progress</p>
+              <p className="text-sm font-semibold text-gray-800">Care Certificate</p>
               <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
-                <div className="h-full bg-green-500 rounded-full transition-all" style={{ width: `${certPct}%` }} />
+                <div className="h-full bg-amber-400 rounded-full transition-all" style={{ width: `${certPct}%` }} />
               </div>
-              <p className="text-xs text-gray-400">{certPct}% complete</p>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-gray-400">{certPct}% complete · {checksTotal}/{plan.sessionsTotal} sessions</p>
+              <p className="text-xs text-gray-600 leading-relaxed">
                 Complete {patientName}&apos;s full programme to earn your verified Care Certificate —
                 usable on job applications.
               </p>
-              <button className="w-full rounded-xl bg-gray-50 border border-gray-200 py-2 text-xs font-medium text-gray-600 hover:bg-gray-100 transition-colors">
-                See what the certificate looks like
+              <button
+                onClick={() => setShowCert((v) => !v)}
+                className="w-full rounded-xl bg-amber-50 border border-amber-200 py-2 text-xs font-semibold text-amber-700 hover:bg-amber-100 transition-colors"
+              >
+                {showCert ? "Hide certificate ▲" : "See what the certificate looks like ▼"}
               </button>
             </div>
+
+            {/* Certificate preview */}
+            {showCert && (
+              <div className="relative rounded-2xl border-2 border-amber-200 bg-gradient-to-b from-amber-50 to-white p-5 shadow-sm overflow-hidden">
+                <div className="absolute top-2.5 left-2.5 w-5 h-5 border-t-2 border-l-2 border-amber-300" />
+                <div className="absolute top-2.5 right-2.5 w-5 h-5 border-t-2 border-r-2 border-amber-300" />
+                <div className="absolute bottom-2.5 left-2.5 w-5 h-5 border-b-2 border-l-2 border-amber-300" />
+                <div className="absolute bottom-2.5 right-2.5 w-5 h-5 border-b-2 border-r-2 border-amber-300" />
+
+                <div className="text-center space-y-2 px-2">
+                  <p className="text-[10px] font-bold text-amber-600 uppercase tracking-[0.2em]">Certificate of Care</p>
+                  <p className="text-2xl">🏅</p>
+                  <p className="text-[11px] text-gray-500">This certifies that</p>
+                  <p className="text-base font-bold text-gray-900">{nameParam}</p>
+                  <p className="text-[11px] text-gray-500 leading-relaxed">
+                    has provided dedicated care and daily check-ins for{" "}
+                    <span className="font-semibold text-gray-700">{patientName}</span>{" "}
+                    throughout their physiotherapy programme on PhysioLoop.
+                  </p>
+                  {certPct >= 100 ? (
+                    <p className="text-xs font-semibold text-green-700">
+                      Full programme completed · {plan.sessionsTotal} sessions
+                    </p>
+                  ) : (
+                    <p className="text-xs text-amber-600">
+                      {checksTotal}/{plan.sessionsTotal} sessions · in progress
+                    </p>
+                  )}
+                  <div className="pt-2 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <div className="h-px flex-1 bg-amber-200" />
+                      <span className="text-[9px] text-amber-600 font-semibold tracking-wider">VERIFIED ON-CHAIN</span>
+                      <div className="h-px flex-1 bg-amber-200" />
+                    </div>
+                    <p className="text-[9px] text-gray-400 font-mono">
+                      {planParam ? `${planParam.slice(0, 8)}…${planParam.slice(-8)}` : ""}
+                    </p>
+                    <p className="text-[9px] text-gray-400">Solana · PhysioLoop Protocol</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>
