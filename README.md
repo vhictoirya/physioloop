@@ -2,6 +2,8 @@
 
 **Verifiable physiotherapy adherence on Solana.**
 
+🌐 **Live demo:** [physioloop.vercel.app](https://physioloop.vercel.app)
+
 Patients complete their prescribed exercises. A vision model running entirely on their phone confirms each rep. A proof hash lands on-chain. The physiotherapist gets paid per session — automatically, in PUSD — with no paper forms, no trust required, and no exercise footage ever leaving the patient's device.
 
 ---
