@@ -788,10 +788,37 @@ function PatientPage() {
       weeks.push(week);
     }
 
+    const planComplete = plan.sessionsCompleted >= plan.sessionsTotal;
+
+    const rewards = [
+      {
+        icon: "🎁",
+        label: "First Session Gift",
+        desc: "Complete session 1",
+        amount: "$0.50",
+        earned: plan.sessionsCompleted >= 1,
+      },
+      {
+        icon: "🔥",
+        label: "7-Session Streak",
+        desc: plan.sessionsCompleted >= 7 ? "Earned!" : `${plan.sessionsCompleted}/7 sessions`,
+        amount: "$0.50",
+        earned: plan.sessionsCompleted >= 7,
+      },
+      {
+        icon: "🎰",
+        label: "Plan Completion Raffle",
+        desc: planComplete ? "Entered into prize draw!" : `${plan.sessionsCompleted}/${plan.sessionsTotal} sessions`,
+        amount: "$1.00",
+        earned: planComplete,
+      },
+    ];
+
     return (
       <div className="p-5 space-y-4">
         <h2 className="text-lg font-bold text-gray-900">Your Progress</h2>
 
+        {/* Session calendar */}
         <div className="rounded-2xl bg-white border border-gray-200 p-4 shadow-sm space-y-3">
           {weeks.map((week, wi) => (
             <div key={wi} className="flex items-center gap-2">
@@ -812,6 +839,30 @@ function PatientPage() {
           </div>
         </div>
 
+        {/* Torque rewards */}
+        <div className="rounded-2xl bg-white border border-gray-200 p-4 shadow-sm space-y-3">
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Torque Rewards</p>
+            <span className="text-[10px] bg-purple-50 text-purple-700 rounded-full px-2 py-0.5 font-medium">Powered by Torque</span>
+          </div>
+          {rewards.map((r) => (
+            <div key={r.label} className="flex items-center gap-3">
+              <span className={`text-xl ${r.earned ? "" : "opacity-25"}`}>{r.icon}</span>
+              <div className="flex-1">
+                <p className={`text-sm font-medium ${r.earned ? "text-gray-900" : "text-gray-400"}`}>{r.label}</p>
+                <p className="text-xs text-gray-400">{r.desc}</p>
+              </div>
+              <span className={`text-sm font-bold ${r.earned ? "text-green-700" : "text-gray-300"}`}>
+                {r.earned ? `✓ ${r.amount}` : r.amount}
+              </span>
+            </div>
+          ))}
+          <div className="pt-2 border-t border-gray-100">
+            <p className="text-[11px] text-gray-400">Rewards distributed automatically on-chain · no claim needed</p>
+          </div>
+        </div>
+
+        {/* Deposit breakdown */}
         <div className="rounded-2xl bg-white border border-gray-200 p-4 shadow-sm space-y-2">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Treatment deposit</p>
           <div className="flex justify-between text-sm"><span className="text-gray-500">Total deposited</span><span className="font-semibold">${pusdToDisplay(totalDeposit)}</span></div>
@@ -827,11 +878,47 @@ function PatientPage() {
           <div className="flex justify-between text-sm pt-1 border-t border-gray-100"><span className="text-gray-500">Remaining in escrow</span><span className="font-semibold text-green-700">${pusdToDisplay(remaining)}</span></div>
         </div>
 
+        {/* Caregiver certificate */}
         {plan.caregiverName && (
-          <div className="rounded-2xl bg-white border border-gray-200 p-4 shadow-sm">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Caregiver</p>
-            <p className="text-sm font-medium text-gray-800">{plan.caregiverName}</p>
-            <p className="text-xs text-gray-400 mt-0.5">Checking in on your progress daily</p>
+          <div className="relative rounded-2xl border-2 border-amber-200 bg-gradient-to-b from-amber-50 to-white p-5 shadow-sm overflow-hidden">
+            {/* Corner marks */}
+            <div className="absolute top-2.5 left-2.5 w-5 h-5 border-t-2 border-l-2 border-amber-300" />
+            <div className="absolute top-2.5 right-2.5 w-5 h-5 border-t-2 border-r-2 border-amber-300" />
+            <div className="absolute bottom-2.5 left-2.5 w-5 h-5 border-b-2 border-l-2 border-amber-300" />
+            <div className="absolute bottom-2.5 right-2.5 w-5 h-5 border-b-2 border-r-2 border-amber-300" />
+
+            <div className="text-center space-y-2 px-2">
+              <p className="text-[10px] font-bold text-amber-600 uppercase tracking-[0.2em]">Certificate of Care</p>
+              <p className="text-2xl">🏅</p>
+              <p className="text-[11px] text-gray-500">This certifies that</p>
+              <p className="text-base font-bold text-gray-900">{plan.caregiverName}</p>
+              <p className="text-[11px] text-gray-500 leading-relaxed">
+                has provided dedicated care and daily check-ins for{" "}
+                <span className="font-semibold text-gray-700">{plan.patientName || nameParam}</span>{" "}
+                {plan.condition ? `recovering from ${plan.condition}` : "throughout their physiotherapy programme"} on PhysioLoop.
+              </p>
+              {planComplete && (
+                <p className="text-xs font-semibold text-green-700">
+                  Full programme completed · {plan.sessionsTotal} sessions
+                </p>
+              )}
+              {!planComplete && (
+                <p className="text-xs text-amber-600">
+                  {plan.sessionsCompleted}/{plan.sessionsTotal} sessions · in progress
+                </p>
+              )}
+              <div className="pt-2 space-y-1">
+                <div className="flex items-center gap-2">
+                  <div className="h-px flex-1 bg-amber-200" />
+                  <span className="text-[9px] text-amber-600 font-semibold tracking-wider">VERIFIED ON-CHAIN</span>
+                  <div className="h-px flex-1 bg-amber-200" />
+                </div>
+                <p className="text-[9px] text-gray-400 font-mono">
+                  {planParam ? `${planParam.slice(0, 8)}…${planParam.slice(-8)}` : ""}
+                </p>
+                <p className="text-[9px] text-gray-400">Solana · PhysioLoop Protocol</p>
+              </div>
+            </div>
           </div>
         )}
       </div>
