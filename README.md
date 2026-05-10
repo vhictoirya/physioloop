@@ -315,11 +315,3 @@ physioloop/
 
 ---
 
-## Colosseum Frontier submission
-
-PhysioLoop was built for the **Colosseum Frontier hackathon** (May 2026).
-
-**Track:** Consumer / DeSci / Healthcare  
-**Side tracks:** Tether QVAC ($10k), PalmUSD, Torque
-
-The core thesis: on-device AI attestation is the missing link between prescribing physiotherapy and verifying it was done. A proof hash submitted on-chain is cheaper, more private, and more auditable than any paper-based or cloud-based alternative. PUSD makes payments instant and programmable. Torque makes patient and caregiver incentives self-sustaining without a central reward budget.
