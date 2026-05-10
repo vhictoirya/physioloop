@@ -4,7 +4,7 @@
 
 🌐 **Live demo:** [physioloop.vercel.app](https://physioloop.vercel.app)
 
-Patients complete their prescribed exercises. A vision model running entirely on their phone confirms each rep. A proof hash lands on-chain. The physiotherapist gets paid per session — automatically, in PUSD — with no paper forms, no trust required, and no exercise footage ever leaving the patient's device.
+Physioloop is an exercise compliance app, wherevy patients complete their prescribed exercises. A vision model running entirely on their phone confirms each exercises. A proof hash lands on-chain. The physiotherapist gets paid per session — automatically, in PUSD — with no paper forms, no trust required, and no exercise footage ever leaving the patient's device, also the caregiver also get rewarded as well as having a certification.
 
 ---
 
